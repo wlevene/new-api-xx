@@ -15,3 +15,10 @@ func TestUpload(t *testing.T) {
 
 	client.GetFile("test-111")
 }
+
+func TestFindHosting(t *testing.T) {
+	result := AliHostingFindDB("test-1111")
+	fmt.Println("AliURl:", result.AliURl)
+	fmt.Println(result.TaskID)
+
+}

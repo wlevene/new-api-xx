@@ -38,7 +38,7 @@ func NewAliImageHostingClient() *AliImageHostingClient {
 	return result
 }
 
-func (ali *AliImageHostingClient) Upload(key string, bytes_val []byte) string {
+func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) string {
 	fmt.Println("upload...")
 
 	if len(bytes_val) == 0 {
@@ -46,7 +46,7 @@ func (ali *AliImageHostingClient) Upload(key string, bytes_val []byte) string {
 		return ""
 	}
 
-	objectKey := key
+	objectKey := task_id
 
 	if objectKey == "" {
 
@@ -63,11 +63,20 @@ func (ali *AliImageHostingClient) Upload(key string, bytes_val []byte) string {
 		return ""
 	}
 
+	url := fmt.Sprintf("http://%s.%s.com/%s", BUCKET, Endpoint, objectKey)
+
+	hosting := &AliImageHostingData{
+		TaskID: task_id,
+		AliURl: url,
+	}
+
+	AliHostingInsertDB(hosting)
+
 	// 获取文件地址
 	// 格式：http://<Bucket 域名>/<文件路径>
 	// 例如：http://<your-bucket-name>.<your-oss-endpoint>.com/<your-object-name>
 
-	return fmt.Sprintf("http://%s.%s.com/%s", BUCKET, Endpoint, objectKey)
+	return url
 }
 
 func (ali *AliImageHostingClient) GetFile(key string) {

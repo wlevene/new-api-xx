@@ -19,6 +19,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
+	imagehosting "one-api/image_hosting"
 )
 
 func RelayMidjourneyImage(c *gin.Context) {
@@ -30,7 +32,9 @@ func RelayMidjourneyImage(c *gin.Context) {
 		})
 		return
 	}
-	resp, err := http.Get(midjourneyTask.ImageUrl)
+
+	img_url := imagehosting.GetAliUrl(taskId, midjourneyTask.ImageUrl)
+	resp, err := http.Get(img_url)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "http_get_image_failed",
