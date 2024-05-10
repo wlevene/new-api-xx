@@ -8,6 +8,10 @@ import (
 func TestUpload(t *testing.T) {
 
 	client := NewAliImageHostingClient()
+
+	client.GetFile("1715351615729501")
+	return
+
 	fmt.Println("client:", client)
 	url := client.Upload("test-111", []byte{'1', '2'})
 
@@ -17,7 +21,7 @@ func TestUpload(t *testing.T) {
 }
 
 func TestFindHosting(t *testing.T) {
-	result := AliHostingFindDB("test-1111")
+	result := AliHostingFindDB("1715351615729501")
 	fmt.Println("AliURl:", result.AliURl)
 	fmt.Println(result.TaskID)
 

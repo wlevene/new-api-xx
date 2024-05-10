@@ -63,7 +63,7 @@ func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) strin
 		return ""
 	}
 
-	url := fmt.Sprintf("http://%s.%s.com/%s", BUCKET, Endpoint, objectKey)
+	url := fmt.Sprintf("http://%s.%s/%s", BUCKET, Endpoint, objectKey)
 
 	hosting := &AliImageHostingData{
 		TaskID: task_id,

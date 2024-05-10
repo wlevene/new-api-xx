@@ -37,6 +37,7 @@ func GetAliUrl(task_id string, mj_url string) string {
 		}
 
 		ali_url := client.Upload(task_id, body)
+		fmt.Println("image url:", ali_url)
 		return ali_url
 	}
 
