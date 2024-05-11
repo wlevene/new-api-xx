@@ -57,7 +57,7 @@ func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) strin
 
 	}
 
-	err := ali.bucket.PutObject(objectKey, bytes.NewReader([]byte(bytes_val)))
+	err := ali.bucket.PutObject(objectKey+".png", bytes.NewReader([]byte(bytes_val)))
 	if err != nil {
 		fmt.Println("4", err)
 		return ""
