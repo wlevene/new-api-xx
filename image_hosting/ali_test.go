@@ -9,7 +9,7 @@ func TestUpload(t *testing.T) {
 
 	client := NewAliImageHostingClient()
 
-	client.GetFile("1715351615729501")
+	client.GetFile("1715391715582536")
 	return
 
 	fmt.Println("client:", client)

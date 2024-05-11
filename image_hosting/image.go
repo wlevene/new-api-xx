@@ -4,16 +4,26 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"one-api/model"
 )
 
-func GetAliUrl(task_id string, mj_url string) string {
-	if task_id == "" {
-		return mj_url
+func GetAliUrl(task *model.Midjourney) string {
+	if task == nil {
+		return ""
 	}
 
-	result := AliHostingFindDB(task_id)
+	if task.MjId == "" {
+		return task.ImageUrl
+	}
+
+	if task.FinishTime <= 0 {
+		fmt.Println("任务还未完成,返回原始链接")
+		return task.ImageUrl
+	}
+
+	result := AliHostingFindDB(task.MjId)
 	if result == nil {
-		return mj_url
+		return task.ImageUrl
 	}
 
 	if result.AliURl != "" {
@@ -23,7 +33,7 @@ func GetAliUrl(task_id string, mj_url string) string {
 	if result.TaskID == "" {
 		client := NewAliImageHostingClient()
 
-		resp, err := http.Get(mj_url)
+		resp, err := http.Get(task.ImageUrl)
 		if err != nil {
 			fmt.Println(err)
 			return ""
@@ -36,7 +46,7 @@ func GetAliUrl(task_id string, mj_url string) string {
 			return ""
 		}
 
-		ali_url := client.Upload(task_id, body)
+		ali_url := client.Upload(task.MjId, body)
 		fmt.Println("image url:", ali_url)
 		return ali_url
 	}

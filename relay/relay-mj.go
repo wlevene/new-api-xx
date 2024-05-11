@@ -33,7 +33,7 @@ func RelayMidjourneyImage(c *gin.Context) {
 		return
 	}
 
-	img_url := imagehosting.GetAliUrl(taskId, midjourneyTask.ImageUrl)
+	img_url := imagehosting.GetAliUrl(midjourneyTask)
 	resp, err := http.Get(img_url)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
