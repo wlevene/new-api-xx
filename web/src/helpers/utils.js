@@ -212,6 +212,16 @@ export const verifyJSON = (str) => {
   return true;
 };
 
+export function verifyJSONPromise(value) {
+  try {
+    JSON.parse(value);
+    return Promise.resolve();
+  } catch (e) {
+    return Promise.reject('不是合法的 JSON 字符串');
+  }
+}
+
+
 export function shouldShowPrompt(id) {
   let prompt = localStorage.getItem(`prompt-${id}`);
   return !prompt;
@@ -219,4 +229,29 @@ export function shouldShowPrompt(id) {
 
 export function setPromptShown(id) {
   localStorage.setItem(`prompt-${id}`, 'true');
+}
+
+/**
+ * 比较两个对象的属性，找出有变化的属性，并返回包含变化属性信息的数组
+ * @param {Object} oldObject - 旧对象
+ * @param {Object} newObject - 新对象
+ * @return {Array} 包含变化属性信息的数组，每个元素是一个对象，包含 key, oldValue 和 newValue
+ */
+export function compareObjects(oldObject, newObject) {
+  const changedProperties = [];
+
+  // 比较两个对象的属性
+  for (const key in oldObject) {
+    if (oldObject.hasOwnProperty(key) && newObject.hasOwnProperty(key)) {
+      if (oldObject[key] !== newObject[key]) {
+        changedProperties.push({
+          key: key,
+          oldValue: oldObject[key],
+          newValue: newObject[key],
+        });
+      }
+    }
+  }
+
+  return changedProperties;
 }

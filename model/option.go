@@ -59,6 +59,8 @@ func InitOptionMap() {
 	common.OptionMap["SystemName"] = common.SystemName
 	common.OptionMap["Logo"] = common.Logo
 	common.OptionMap["ServerAddress"] = ""
+	common.OptionMap["WorkerUrl"] = constant.WorkerUrl
+	common.OptionMap["WorkerValidKey"] = constant.WorkerValidKey
 	common.OptionMap["PayAddress"] = ""
 	common.OptionMap["CustomCallbackAddress"] = ""
 	common.OptionMap["EpayId"] = ""
@@ -83,6 +85,7 @@ func InitOptionMap() {
 	common.OptionMap["ModelRatio"] = common.ModelRatio2JSONString()
 	common.OptionMap["ModelPrice"] = common.ModelPrice2JSONString()
 	common.OptionMap["GroupRatio"] = common.GroupRatio2JSONString()
+	common.OptionMap["CompletionRatio"] = common.CompletionRatio2JSONString()
 	common.OptionMap["TopUpLink"] = common.TopUpLink
 	common.OptionMap["ChatLink"] = common.ChatLink
 	common.OptionMap["ChatLink2"] = common.ChatLink2
@@ -231,7 +234,11 @@ func updateOptionMap(key string, value string) (err error) {
 	case "SMTPToken":
 		common.SMTPToken = value
 	case "ServerAddress":
-		common.ServerAddress = value
+		constant.ServerAddress = value
+	case "WorkerUrl":
+		constant.WorkerUrl = value
+	case "WorkerValidKey":
+		constant.WorkerValidKey = value
 	case "PayAddress":
 		constant.PayAddress = value
 	case "CustomCallbackAddress":
@@ -290,6 +297,8 @@ func updateOptionMap(key string, value string) (err error) {
 		err = common.UpdateModelRatioByJSONString(value)
 	case "GroupRatio":
 		err = common.UpdateGroupRatioByJSONString(value)
+	case "CompletionRatio":
+		err = common.UpdateCompletionRatioByJSONString(value)
 	case "ModelPrice":
 		err = common.UpdateModelPriceByJSONString(value)
 	case "TopUpLink":

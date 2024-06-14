@@ -12,7 +12,6 @@ import (
 var StartTime = time.Now().Unix() // unit: second
 var Version = "v0.0.0"            // this hard coding will be replaced automatically when building, no need to manually change
 var SystemName = "New API"
-var ServerAddress = "http://localhost:3000"
 var Footer = ""
 var Logo = ""
 var TopUpLink = ""
@@ -208,6 +207,9 @@ const (
 	ChannelTypeLingYiWanWu    = 31
 	ChannelTypeAws            = 33
 	ChannelTypeCohere         = 34
+	ChannelTypeMiniMax        = 35
+
+	ChannelTypeDummy // this one is only for count, do not add any channel after this
 )
 
 var ChannelBaseURLs = []string{
@@ -246,4 +248,5 @@ var ChannelBaseURLs = []string{
 	"",                                          //32
 	"",                                          //33
 	"https://api.cohere.ai",                     //34
+	"https://api.minimax.chat",                  //35
 }
