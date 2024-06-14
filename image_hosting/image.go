@@ -3,6 +3,7 @@ package imagehosting
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"one-api/model"
 )
@@ -36,23 +37,25 @@ func GetAliUrl(task *model.Midjourney, xossprocess string) (string, bool) {
 	}
 
 	if result.TaskID == "" {
+
+		log.Println("start upload file to aliyun 。。。")
 		client := NewAliImageHostingClient()
 
 		resp, err := http.Get(task.ImageUrl)
 		if err != nil {
-			fmt.Println(err)
+			log.Println("a1", err)
 			return "", in_ali
 		}
 		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Println("a2", err)
 			return "", in_ali
 		}
 
 		ali_url := client.Upload(task.MjId, body)
-		fmt.Println("image url:", ali_url)
+		log.Println("upliad aliyun finish image url:", ali_url)
 		return ali_url, in_ali
 	}
 

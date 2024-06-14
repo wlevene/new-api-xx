@@ -23,6 +23,8 @@ import (
 )
 
 func RelayMidjourneyImageAliAddr(c *gin.Context) {
+
+	log.Println("123123123123123")
 	taskId := c.Param("id")
 	midjourneyTask := model.GetByOnlyMJId(taskId)
 	if midjourneyTask == nil {
@@ -36,6 +38,8 @@ func RelayMidjourneyImageAliAddr(c *gin.Context) {
 
 	img_url = midjourneyTask.ImageUrl
 
+	log.Println("-------------------")
+	log.Println("-------------------")
 	img_url, _ = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
 	c.JSON(200, gin.H{
 		"url": img_url,
@@ -140,6 +144,11 @@ func RelayMidjourneyNotify(c *gin.Context) *dto.MidjourneyResponse {
 			Code:        4,
 			Description: "update_midjourney_task_failed",
 		}
+	}
+
+	// 如果任务完成则上传aliyun
+	if midjRequest.FinishTime > 0 {
+		imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
 	}
 
 	return nil
