@@ -7,7 +7,7 @@ import (
 	"one-api/model"
 )
 
-func GetAliUrl(task *model.Midjourney) string {
+func GetAliUrl(task *model.Midjourney, xossprocess string) string {
 	if task == nil {
 		return ""
 	}
@@ -23,6 +23,9 @@ func GetAliUrl(task *model.Midjourney) string {
 
 	result := AliHostingFindDB(task.MjId)
 	if result == nil {
+		if xossprocess != "" {
+			return fmt.Sprintf("%s?%s", task.ImageUrl, xossprocess)
+		}
 		return task.ImageUrl
 	}
 

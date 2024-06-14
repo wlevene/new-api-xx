@@ -11,6 +11,7 @@ import (
 	"one-api/common"
 	"one-api/constant"
 	"one-api/dto"
+	"one-api/imagehosting"
 	"one-api/model"
 	relayconstant "one-api/relay/constant"
 	"one-api/service"
@@ -19,9 +20,59 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-
-	imagehosting "one-api/image_hosting"
 )
+
+func RelayMidjourneyImageAliAddr(c *gin.Context) {
+	taskId := c.Param("id")
+	midjourneyTask := model.GetByOnlyMJId(taskId)
+	if midjourneyTask == nil {
+		c.JSON(400, gin.H{
+			"error": "midjourney_task_not_found",
+		})
+		return
+	}
+
+	var img_url string
+
+	img_url = midjourneyTask.ImageUrl
+
+	img_url = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
+
+	resp, err := http.Get(img_url)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "http_get_image_failed",
+		})
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		responseBody, _ := io.ReadAll(resp.Body)
+		c.JSON(resp.StatusCode, gin.H{
+			"error": string(responseBody),
+		})
+		return
+	}
+
+	c.JSON(resp.StatusCode, gin.H{
+		"url": img_url,
+	})
+
+	// 从Content-Type头获取MIME类型
+	// contentType := resp.Header.Get("Content-Type")
+	// if contentType == "" {
+	// 	// 如果无法确定内容类型，则默认为jpeg
+	// 	contentType = "image/jpeg"
+	// }
+	// // 设置响应的内容类型
+	// c.Writer.Header().Set("Content-Type", contentType)
+	// // 将图片流式传输到响应体
+	// _, err = io.Copy(c.Writer, resp.Body)
+	// if err != nil {
+	// 	log.Println("Failed to stream image:", err)
+	// }
+	return
+}
 
 func RelayMidjourneyImage(c *gin.Context) {
 	taskId := c.Param("id")
@@ -33,7 +84,13 @@ func RelayMidjourneyImage(c *gin.Context) {
 		return
 	}
 
-	img_url := imagehosting.GetAliUrl(midjourneyTask)
+	var img_url string
+
+	img_url = midjourneyTask.ImageUrl
+
+	// fmt.Println(c.Query("x-oss-process"))
+	img_url = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
+
 	resp, err := http.Get(img_url)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

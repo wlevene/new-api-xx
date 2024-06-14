@@ -1,10 +1,11 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"one-api/controller"
 	"one-api/middleware"
 	"one-api/relay"
+
+	"github.com/gin-gonic/gin"
 )
 
 func SetRelayRouter(router *gin.Engine) {
@@ -53,6 +54,9 @@ func SetRelayRouter(router *gin.Engine) {
 }
 
 func registerMjRouterGroup(relayMjRouter *gin.RouterGroup) {
+
+	// TODO:ali image url
+	relayMjRouter.GET("/ali/:id", relay.RelayMidjourneyImageAliAddr)
 	relayMjRouter.GET("/image/:id", relay.RelayMidjourneyImage)
 	relayMjRouter.Use(middleware.TokenAuth(), middleware.Distribute())
 	{
