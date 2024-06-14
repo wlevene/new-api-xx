@@ -11,7 +11,7 @@ import (
 	"one-api/common"
 	"one-api/constant"
 	"one-api/dto"
-	"one-api/imagehosting"
+	imagehosting "one-api/image_hosting"
 	"one-api/model"
 	relayconstant "one-api/relay/constant"
 	"one-api/service"
@@ -38,23 +38,7 @@ func RelayMidjourneyImageAliAddr(c *gin.Context) {
 
 	img_url = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
 
-	resp, err := http.Get(img_url)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "http_get_image_failed",
-		})
-		return
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		responseBody, _ := io.ReadAll(resp.Body)
-		c.JSON(resp.StatusCode, gin.H{
-			"error": string(responseBody),
-		})
-		return
-	}
-
-	c.JSON(resp.StatusCode, gin.H{
+	c.JSON(200, gin.H{
 		"url": img_url,
 	})
 
