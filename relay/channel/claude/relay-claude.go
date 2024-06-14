@@ -138,11 +138,11 @@ func RequestOpenAI2ClaudeMessage(textRequest dto.GeneralOpenAIRequest) (*ClaudeR
 						// 判断是否是url
 						if strings.HasPrefix(imageUrl.Url, "http") {
 							// 是url，获取图片的类型和base64编码的数据
-							mimeType, data, _ := common.GetImageFromUrl(imageUrl.Url)
+							mimeType, data, _ := service.GetImageFromUrl(imageUrl.Url)
 							claudeMediaMessage.Source.MediaType = mimeType
 							claudeMediaMessage.Source.Data = data
 						} else {
-							_, format, base64String, err := common.DecodeBase64ImageData(imageUrl.Url)
+							_, format, base64String, err := service.DecodeBase64ImageData(imageUrl.Url)
 							if err != nil {
 								return nil, err
 							}
@@ -370,7 +370,7 @@ func claudeHandler(requestMode int, c *gin.Context, resp *http.Response, promptT
 		}, nil
 	}
 	fullTextResponse := ResponseClaude2OpenAI(requestMode, &claudeResponse)
-	completionTokens, err, _ := service.CountTokenText(claudeResponse.Completion, model, false)
+	completionTokens, err := service.CountTokenText(claudeResponse.Completion, model)
 	if err != nil {
 		return service.OpenAIErrorWrapper(err, "count_token_text_failed", http.StatusInternalServerError), nil
 	}

@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"one-api/common"
+	"one-api/constant"
 	"strconv"
 	"strings"
 )
 
 type Token struct {
 	Id                 int            `json:"id"`
-	UserId             int            `json:"user_id"`
+	UserId             int            `json:"user_id" gorm:"index"`
 	Key                string         `json:"key" gorm:"type:char(48);uniqueIndex"`
 	Status             int            `json:"status" gorm:"default:1"`
 	Name               string         `json:"name" gorm:"index" `
@@ -297,7 +298,7 @@ func PostConsumeTokenQuota(tokenId int, userQuota int, quota int, preConsumedQuo
 						prompt = "您的额度已用尽"
 					}
 					if email != "" {
-						topUpLink := fmt.Sprintf("%s/topup", common.ServerAddress)
+						topUpLink := fmt.Sprintf("%s/topup", constant.ServerAddress)
 						err = common.SendEmail(prompt, email,
 							fmt.Sprintf("%s，当前剩余额度为 %d，为了不影响您的使用，请及时充值。<br/>充值链接：<a href='%s'>%s</a>", prompt, userQuota, topUpLink, topUpLink))
 						if err != nil {
