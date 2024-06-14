@@ -20,6 +20,7 @@ func GetAliUrl(task *model.Midjourney, xossprocess string) (string, bool) {
 
 	if task.FinishTime <= 0 {
 		fmt.Println("任务还未完成,返回原始链接")
+		return "", in_ali
 		return task.ImageUrl, in_ali
 	}
 
@@ -55,7 +56,7 @@ func GetAliUrl(task *model.Midjourney, xossprocess string) (string, bool) {
 		}
 
 		ali_url := client.Upload(task.MjId, body)
-		log.Println("upliad aliyun finish image url:", ali_url)
+		log.Println("upload aliyun finish image url:", ali_url)
 		return ali_url, in_ali
 	}
 

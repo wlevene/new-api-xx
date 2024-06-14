@@ -138,17 +138,21 @@ func RelayMidjourneyNotify(c *gin.Context) *dto.MidjourneyResponse {
 	midjourneyTask.ImageUrl = midjRequest.ImageUrl
 	midjourneyTask.Status = midjRequest.Status
 	midjourneyTask.FailReason = midjRequest.FailReason
+
+	// 如果任务完成则上传aliyun
+	log.Println("任务FinishTime:", midjourneyTask.FinishTime)
+	log.Println("任务State:", midjourneyTask.State)
+	if midjourneyTask.FinishTime > 0 {
+		log.Println("任务已完成，开始上 传阿里云")
+		imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
+	}
+
 	err = midjourneyTask.Update()
 	if err != nil {
 		return &dto.MidjourneyResponse{
 			Code:        4,
 			Description: "update_midjourney_task_failed",
 		}
-	}
-
-	// 如果任务完成则上传aliyun
-	if midjRequest.FinishTime > 0 {
-		imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
 	}
 
 	return nil
@@ -352,6 +356,9 @@ func RelayMidjourneyTask(c *gin.Context, relayMode int) *dto.MidjourneyResponse 
 			}
 		}
 		midjourneyTask := coverMidjourneyTaskDto(c, originTask)
+
+		log.Println("+++++++++++++", midjourneyTask.State)
+		log.Println("+++++++++++++", midjourneyTask.FinishTime)
 		respBody, err = json.Marshal(midjourneyTask)
 		if err != nil {
 			return &dto.MidjourneyResponse{
