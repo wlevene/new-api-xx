@@ -7,30 +7,32 @@ import (
 	"one-api/model"
 )
 
-func GetAliUrl(task *model.Midjourney, xossprocess string) string {
+func GetAliUrl(task *model.Midjourney, xossprocess string) (string, bool) {
+	var in_ali bool
 	if task == nil {
-		return ""
+		return "", in_ali
 	}
 
 	if task.MjId == "" {
-		return task.ImageUrl
+		return task.ImageUrl, in_ali
 	}
 
 	if task.FinishTime <= 0 {
 		fmt.Println("任务还未完成,返回原始链接")
-		return task.ImageUrl
+		return task.ImageUrl, in_ali
 	}
 
 	result := AliHostingFindDB(task.MjId)
 	if result == nil {
 		if xossprocess != "" {
-			return fmt.Sprintf("%s?%s", task.ImageUrl, xossprocess)
+			return fmt.Sprintf("%s?%s", task.ImageUrl, xossprocess), in_ali
 		}
-		return task.ImageUrl
+		return task.ImageUrl, in_ali
 	}
 
+	in_ali = true
 	if result.AliURl != "" {
-		return result.AliURl
+		return result.AliURl, in_ali
 	}
 
 	if result.TaskID == "" {
@@ -39,20 +41,20 @@ func GetAliUrl(task *model.Midjourney, xossprocess string) string {
 		resp, err := http.Get(task.ImageUrl)
 		if err != nil {
 			fmt.Println(err)
-			return ""
+			return "", in_ali
 		}
 		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Println(err)
-			return ""
+			return "", in_ali
 		}
 
 		ali_url := client.Upload(task.MjId, body)
 		fmt.Println("image url:", ali_url)
-		return ali_url
+		return ali_url, in_ali
 	}
 
-	return ""
+	return "", in_ali
 }

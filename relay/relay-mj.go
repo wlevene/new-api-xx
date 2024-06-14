@@ -36,8 +36,7 @@ func RelayMidjourneyImageAliAddr(c *gin.Context) {
 
 	img_url = midjourneyTask.ImageUrl
 
-	img_url = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
-
+	img_url, _ = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
 	c.JSON(200, gin.H{
 		"url": img_url,
 	})
@@ -73,7 +72,7 @@ func RelayMidjourneyImage(c *gin.Context) {
 	img_url = midjourneyTask.ImageUrl
 
 	// fmt.Println(c.Query("x-oss-process"))
-	img_url = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
+	img_url, _ = imagehosting.GetAliUrl(midjourneyTask, c.Query("x-oss-process"))
 
 	resp, err := http.Get(img_url)
 	if err != nil {
