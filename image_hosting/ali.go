@@ -3,6 +3,7 @@ package imagehosting
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -18,7 +19,14 @@ type (
 
 func NewAliImageHostingClient() *AliImageHostingClient {
 
-	client, err := oss.New(Endpoint, ACCESS_KEY_ID, ACCESS_KEY_SECRET)
+	time := oss.Timeout(40, 100)
+	// conn := oss.MaxConns(10, 20, 20)
+	client, err := oss.New(
+		Endpoint,
+		ACCESS_KEY_ID,
+		ACCESS_KEY_SECRET,
+		time,
+	)
 	if err != nil {
 		fmt.Println("1", err)
 		return nil
@@ -42,7 +50,7 @@ func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) strin
 	fmt.Println("upload...")
 
 	if len(bytes_val) == 0 {
-		fmt.Println("3")
+		log.Println("3")
 		return ""
 	}
 
@@ -59,7 +67,7 @@ func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) strin
 
 	err := ali.bucket.PutObject(objectKey+".png", bytes.NewReader([]byte(bytes_val)))
 	if err != nil {
-		fmt.Println("4", err)
+		log.Println("4", err)
 		return ""
 	}
 
