@@ -72,6 +72,7 @@ func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) strin
 	}
 
 	url := fmt.Sprintf("http://%s.%s/%s.png", BUCKET, Endpoint, objectKey)
+	// url := fmt.Sprintf("http://%s.%s/%s.png", BUCKET, "ellabook-ai-pic.oss-accelerate.aliyuncs.com", objectKey)
 
 	hosting := &AliImageHostingData{
 		TaskID: task_id,
