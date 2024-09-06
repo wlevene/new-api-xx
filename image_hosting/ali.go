@@ -71,8 +71,8 @@ func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) strin
 		return ""
 	}
 
-	// url := fmt.Sprintf("http://%s.%s/%s.png", BUCKET, Endpoint, objectKey)
-	url := fmt.Sprintf("http://%s.%s/%s.png", BUCKET, "ellabook-ai-pic.oss-accelerate.aliyuncs.com", objectKey)
+	url := fmt.Sprintf("http://%s.%s/%s.png", BUCKET, Endpoint, objectKey)
+	// url := fmt.Sprintf("http://%s.%s/%s.png", BUCKET,    "ellabook-ai-pic.oss-accelerate.aliyuncs.com", objectKey)
 
 	hosting := &AliImageHostingData{
 		TaskID: task_id,
@@ -80,11 +80,6 @@ func (ali *AliImageHostingClient) Upload(task_id string, bytes_val []byte) strin
 	}
 
 	AliHostingInsertDB(hosting)
-
-	// 获取文件地址
-	// 格式：http://<Bucket 域名>/<文件路径>
-	// 例如：http://<your-bucket-name>.<your-oss-endpoint>.com/<your-object-name>
-
 	return url
 }
 
