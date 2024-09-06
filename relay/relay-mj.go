@@ -45,7 +45,7 @@ func RelayMidjourneyImageAliAddr(c *gin.Context) {
 	// http://ellabook-ai-pic.oss-accelerate.aliyuncs.com/1725602960065474.png
 	img_url = strings.Replace(img_url,
 		"http://ellabook-ai-pic.oss-accelerate.aliyuncs.com",
-		"aipic.ellabook.cn",
+		"https://aipic.ellabook.cn",
 		-1)
 	c.JSON(200, gin.H{
 		"url": img_url,
